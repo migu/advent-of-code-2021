@@ -2,12 +2,13 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def filename "input1")
+(def filename "resources/1/input")
 (defn parse-int [s] (Integer/parseInt s))
 (defn read-numbers-from-file []
   (->> (slurp filename)
        str/split-lines
        (map parse-int)))
+(def numbers (read-numbers-from-file))
 
 (defn update-windows [windows numbers window-size]
   (let [sum (reduce + (take window-size numbers))
@@ -29,6 +30,5 @@
       (evaluate-increase windows sum)
       (recur (update-windows windows numbers window-size) (next numbers) (evaluate-increase windows sum)))))
 
-(def numbers (read-numbers-from-file))
 (println (count-increases numbers 1))
 (println (count-increases numbers 3))
