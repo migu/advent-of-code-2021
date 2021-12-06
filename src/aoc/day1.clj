@@ -1,4 +1,4 @@
-(ns aoc
+(ns aoc.day1
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
@@ -32,3 +32,4 @@
 
 (println (count-increases numbers 1))
 (println (count-increases numbers 3))
+
