@@ -17,7 +17,10 @@
 (defn invert [xs]
   (mapv #(if (= 0 %) 1 0) xs))
 (defn decode-binary [bits]
-  (reduce + (map-indexed #(* %2 (int (Math/pow 2 %1))) (reverse bits))))
+  (->> bits
+       reverse
+       (map-indexed (fn [idx val] (* val (int (Math/pow 2 idx)))))
+       (reduce +)))
 
 (defn calc-power-consumption [lines]
   (let [count (count lines)
@@ -31,11 +34,10 @@
 
 (defn calc-rating [lines test]
   (let [lines (vec (map chars-to-int lines))
-        len (count (first lines))
         select-lines (fn [lines i]
                        (let [cnt (count lines)
                              sum (reduce + (map #(nth % i) lines))]
-                         (filter #(= (nth % i) (if (test cnt sum) 1 0)) lines))
+                         (filter #(= (nth % i) (if (test sum (- cnt sum)) 1 0)) lines))
                        )]
     (loop [lines lines
            i 0]
@@ -44,9 +46,9 @@
         (recur (select-lines lines i) (inc i))))))
 
 (defn calc-oxygen-gen-rating [lines]
-  (calc-rating lines (fn [cnt sum] (>= sum (- cnt sum)))))
+  (calc-rating lines >=))
 (defn calc-o2-scrubber-rating [lines]
-    (calc-rating lines (fn [cnt sum] (< sum (- cnt sum)))))
+    (calc-rating lines <))
 (defn calc-life-support-rating [lines]
   (* (calc-oxygen-gen-rating lines) (calc-o2-scrubber-rating lines)))
 

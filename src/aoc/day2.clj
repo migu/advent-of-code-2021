@@ -19,9 +19,9 @@
   (let [command (:command action)
         value (:value action)]
     (condp = command
-      "forward" (update state :pos #(+ % value))
+      "forward" (update state :pos (partial + value))
       "up" (update state :depth #(- % value))
-      "down" (update state :depth #(+ % value))
+      "down" (update state :depth (partial + value))
       state)))
 
 (defn update-state-2 [state action]
